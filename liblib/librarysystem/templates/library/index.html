@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Inventory Management System</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+
+
+  <style type="text/css">
+    .bs-example {
+      margin: 0px;
+
+    }
+
+    .navbar-brand {
+      font-size: 20px;
+      font-family: sans-serif;
+
+    }
+
+    .col-lg-6 {
+      padding-left: 20%;
+    }
+
+    .jumbotron {
+      margin-bottom: 0px;
+      background-color: white;
+    }
+    .jumbotron img {
+      max-width: 100%; /* Ensure the image scales properly */
+      margin-left: 40%;
+      margin-top: -5%;
+    }
+  </style>
+</head>
+
+<body>
+  {% include "library/navbar.html" %}
+  <div class="jumbotron">
+    <br>
+    <br>
+    <img src="{% static 'images/body_logo.png' %}"alt="">         
+<h1 style="text-align:center; font-family: Arial, sans-serif; font-weight: bold; font-size: 40px;" class="display-4">KIMC INVENTORY MANAGEMENT SYSTEM</h1>
+  </div>
+</body>
+
+</html>

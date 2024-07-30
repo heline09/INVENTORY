@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+    table.redTable {
+      border: 2px solid #A40808;
+      background-color: #EEE7DB;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+
+    table.redTable td,
+    table.redTable th {
+      border: 1px solid #AAAAAA;
+      padding: 3px 2px;
+    }
+
+    table.redTable tbody td {
+      font-size: 13px;
+    }
+
+    table.redTable tr:nth-child(even) {
+      background: #F5C8BF;
+    }
+
+    table.redTable thead {
+      background: #A40808;
+    }
+
+    table.redTable thead th {
+      font-size: 19px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #A40808;
+    }
+
+    table.redTable thead th:first-child {
+      border-left: none;
+    }
+
+    table.redTable tfoot {
+      font-size: 13px;
+      font-weight: bold;
+      color: #FFFFFF;
+      background: #A40808;
+    }
+
+    table.redTable tfoot td {
+      font-size: 13px;
+    }
+
+    table.redTable tfoot .links {
+      text-align: right;
+    }
+
+    table.redTable tfoot .links a {
+      display: inline-block;
+      background: #FFFFFF;
+      color: #A40808;
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+  </style>
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  {% include "library/navbaradmin.html" %}
+  <br><br><br>
+  {% include "library/messages.html" %}
+  <h3 style='font-size: 50px;text-align:center;'>Assigned Equipment</h3>
+  <br><br>
+  <table id="table" class="table container">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Student ID</th>
+        <th scope="col"> Student Name</th>
+        <th scope="col">Tag Number</th>
+        <th scope="col">Asset Name</th>
+        <th scope="col">Borrow Date</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for student_equipment in assigned_equipment %}
+      <tr>
+        <td>{{ student_equipment.student.student_id }}</td>
+        <td>{{ student_equipment.student.first_name }} {{ student_equipment.student.last_name }}</td>
+        <td>{{ student_equipment.equipment.tag_num }}</td>
+        <td>{{ student_equipment.equipment.name }}</td>
+        <td>{{ student_equipment.borrow_date }}</td>
+        <td><a href=""
+            style="padding: 2px 15px; background-color: #45526e; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">edit</a>
+        </td>
+        <td><a href="{% url 'return_equipment' student_equipment.id %}"
+          style="padding: 2px 15px; background-color: #45526e; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">RETURN</a>
+  </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+
+</body>
+
+</html>
