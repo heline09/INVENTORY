@@ -1,0 +1,102 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block title %}Add Student{% endblock title %}
+
+{% block styles %}
+{{ block.super }}
+<style>
+	.centered-form {
+		display: flex;
+		font-weight: bold;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+	}
+
+	.form-container {
+		width: 100%;
+		max-width: 500px;
+		padding: 15px;
+		border-radius: 10px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		background-color: #f7f7f7;
+	}
+	.centered-form .btn {
+		font-size: 16px;
+		font-weight: bold;
+		background: #161df0;
+		border: none;
+		border-radius: 5px; /* Smooth edges for buttons */
+		min-width: 140px;
+	}
+	.centered-form .btn:focus {
+		background: #6e6e6e;
+		outline: none !important;
+	}
+
+	h1 {
+		text-align: center;
+	}
+	
+</style>
+{% endblock styles %}
+
+{% block navbar %}
+{% include "library/navbaradmin.html" %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="centered-form">
+	<div class="form-container">
+		<h1>STUDENT FORM</h1>
+		<form method="post" class="form-horizontal" id="student-form">
+			{% csrf_token %}
+
+			{% for field in form %}
+			<div class="form-group row">
+				<label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
+				<div class="col-sm-8">
+					{{ field }}
+				</div>
+			</div>
+			{% endfor %}
+
+			<div class="form-group row">
+				<div class="col-sm-8 offset-sm-4"  style="margin-left: 25%;">
+					<button type="submit" class="btn btn-secondary">SAVE</button>
+					<button type="button" class="btn btn-secondary" onclick="clearForm()">CLEAR</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+    document.getElementById('id_department').addEventListener('change', function() {
+    var departmentId = this.value;
+    var courseSelect = document.getElementById('id_course');
+    var courses = courseSelect.options;
+
+    // Reset course selection
+    courseSelect.value = '';
+
+    // Loop through all courses and display only those that belong to the selected department
+    for (var i = 0; i < courses.length; i++) {
+        var course = courses[i];
+		console.log(course)
+        if (course.getAttribute('data-department-id') === departmentId || course.value === '') {
+            course.style.display = 'block';
+        } else {
+            course.style.display = 'none';
+        }
+    }
+});
+
+
+	function clearForm() {
+		document.getElementById('student-form').reset();
+	}
+</script>
+{% endblock content %}

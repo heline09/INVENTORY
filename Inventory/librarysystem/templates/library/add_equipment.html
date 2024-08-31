@@ -1,0 +1,179 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block title %}Add Equipment{% endblock title %}
+
+{% block styles %}
+{{ block.super }}
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style type="text/css">
+	body {
+		color: #aa082e;
+		background-color: #fff !important; /* Changed to white */
+		font-family: 'Roboto', sans-serif;
+	}
+
+	.bold-colored-label {
+		font-weight: bold;
+		color: #121213;
+		font-size: 1.5em;
+	}
+
+	.form-control {
+		border: 1px solid #ccc;
+		border-radius: 5px; /* Smooth edges */
+		min-height: 41px;
+		box-shadow: none !important;
+	}
+
+	.form-control:focus {
+		border-color: #5cd3b4;
+		box-shadow: 0 0 5px rgba(92, 211, 180, 0.5);
+	}
+
+	.signup-form {
+		width: 800px;
+		margin: 0 auto;
+		padding: 30px 0;
+		background: #fff;
+		border-radius: 10px; /* Smooth edges for the form container */
+		box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Soft shadow */
+	}
+
+	.signup-form h2 {
+		color: #333;
+		margin: 0 0 30px 0;
+		display: inline-block;
+		padding: 0 30px 10px 0;
+		border-bottom: 3px solid #ffffff;
+	}
+
+	.signup-form form {
+		color: #999;
+		margin-bottom: 15px;
+		padding: 30px;
+	}
+
+	.signup-form .form-group {
+		margin-bottom: 20px;
+		display: flex;
+		align-items: center; /* Align items vertically in the center */
+	}
+
+	.signup-form label {
+		font-weight: bol;
+		font-size: 1em;
+		width: 200px; /* Fixed width for labels */
+		margin-right: 10px; /* Space between label and input */
+	}
+
+	.signup-form input[type="checkbox"] {
+		margin-top: 2px;
+	}
+
+	.signup-form .btn {
+		font-size: 16px;
+		font-weight: bold;
+		background: #161df0;
+		border: none;
+		border-radius: 5px; /* Smooth edges for buttons */
+		margin-top: 20px;
+		min-width: 140px;
+	}
+
+	.signup-form .btn:hover,
+	.signup-form .btn:focus {
+		background: #6e6e6e;
+		outline: none !important;
+	}
+
+	.signup-form a {
+		color: #2b04ff;
+		text-decoration: underline;
+	}
+
+	.signup-form a:hover {
+		text-decoration: none;
+	}
+
+	.signup-form form a {
+		color: #5cd3b4;
+		text-decoration: none;
+	}
+
+	.signup-form form a:hover {
+		text-decoration: underline;
+	}
+
+	.form-horizontal .form-group {
+		display: flex;
+		flex-wrap: wrap; /* Wrap the fields if they overflow */
+	}
+
+	.form-horizontal .form-group .col-xs-8 {
+		flex: 1; /* Take available space */
+	}
+
+	@media (max-width: 768px) {
+		.signup-form {
+			width: 100%; /* Full width on smaller screens */
+			padding: 15px;
+		}
+
+		.signup-form .form-group {
+			flex-direction: column; /* Stack fields vertically on smaller screens */
+			align-items: flex-start; /* Align items at the start */
+		}
+
+		.signup-form label {
+			width: 100%; /* Full width on smaller screens */
+			margin-bottom: 10px; /* Space between label and input */
+		}
+	}
+		</style>
+{% endblock styles %}
+
+{% block navbar %}
+{% include "library/navbaradmin.html" %}
+{% endblock navbar %}
+
+{% block content %}
+{% include "library/navbaradmin.html" %}
+<body style="background-color:#e3e3e9;">
+	<br><br>
+	<br>
+	<h1 style="margin-left: 35%;">
+		EQUIPMENT FORM
+	</h1>
+	<div class="signup-form">
+		<form method="post" class="form-horizontal" id="equipment-form">
+			{% csrf_token %}
+
+			{% for field in form %}
+			<div class="form-group">
+				<label class="control-label col-xs-4 bold-colored-label">{{ field.label_tag }}</label>
+				<div class="col-xs-8">
+					{{ field }}
+				</div>
+			</div>
+			{% endfor %}
+
+
+			<div class="form-group">
+				<div class="col-xs-8 col-xs-offset-4" style="margin-left: 28%;">
+					<button type="submit" class="btn btn-primary btn-lg">ADD</button>
+					<button type="button" class="btn btn-primary btn-lg" onclick="clearForm()">CLEAR</button>
+				</div>
+			</div>
+		</form>
+		<!-- <div class="text-center">View Available Equipment<a href="{% url 'view_equipment' %}">Click here</a></div> -->
+	</div>
+</body>
+<script>
+	 function clearForm() {
+        document.getElementById('equipment-form').reset();
+    }
+</script>
+{% endblock content %}
+{% block footer %}    {% endblock footer %}

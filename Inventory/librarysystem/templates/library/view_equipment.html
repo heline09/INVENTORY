@@ -1,0 +1,162 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block title %}Available Equipment{% endblock title %}
+
+{% block styles %}
+{{ block.super }}
+<style media="screen">
+  /* #searchInput {
+            width: 30%;
+            padding: 8px;
+           
+            margin-bottom: 12px;
+        } */
+  .search-bar {
+    width: 100%;
+    padding: 8px;
+    margin-right: 30%;
+    box-sizing: border-box;
+    /* Ensures padding does not affect width */
+  }
+  th {
+    text-align: left;
+    /* Align text to the left for consistency */
+
+  }
+ .styled-row th{
+  background-color: #2E3192 !important;
+ }
+  table.redTable {
+    border: 2px solid #A40808;
+    background-color: #EEE7DB;
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+  }
+
+  table.redTable td,
+  table.redTable th {
+    border: 1px solid #AAAAAA;
+    padding: 3px 2px;
+  }
+
+  table.redTable tbody td {
+    font-size: 13px;
+  }
+
+  table.redTable tr:nth-child(even) {
+    background: #F5C8BF;
+  }
+
+  table.redTable thead {
+    background: #A40808;
+  }
+
+  table.redTable thead th {
+    font-size: 19px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    border-left: 2px solid #A40808;
+  }
+
+  table.redTable thead th:first-child {
+    border-left: none;
+  }
+
+  table.redTable tfoot {
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background: #A40808;
+  }
+
+  table.redTable tfoot td {
+    font-size: 13px;
+  }
+
+  table.redTable tfoot .links {
+    text-align: right;
+  }
+
+  table.redTable tfoot .links a {
+    display: inline-block;
+    background: #FFFFFF;
+    color: #A40808;
+    padding: 2px 8px;
+    border-radius: 5px;
+  }
+</style>
+{% endblock styles %}
+
+{% block navbar %}
+{% include "library/navbaradmin.html" %}
+{% endblock navbar %}
+
+{% block content %}
+<h3 style='font-size: 40px;text-align:center; margin-bottom: 16px; margin-top: 32px;'>Available Equipment</h3>
+<thead>
+  <table id="table" class="table container">
+    <thead class="thead-dark">
+      <tr class="styled-row">
+        <th scope="col">Asset Name</th>
+        <th scope="col">Serial no.</th>
+        <th scope="col">Tag Number</th>
+        <th scope="col">Model no.</th>
+        <th scope="col">Condition</th>
+        <th colspan="8">
+          <input type="text" id="searchInput" class="search-bar" onkeyup="searchTable()" placeholder="Search...">
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for equipment in equipments %}
+      {% if equipment.is_available %}
+
+      <tr>
+        <td>{{equipment.name}}</td>
+        <td>{{equipment.serial_num}}</td>
+        <td>{{equipment.tag_num}}</td>
+        <td>{{equipment.model_num}}</td>
+        <td>{{equipment.condition}}</td>
+        <!-- <td>{{equipment.is_available}}</td> -->
+        <td><a href="{% url 'edit_equipment' equipment.id %}"
+            style="padding: 2px 15px; background-color: #45526e; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">edit</a>
+        </td>
+        <td>
+          <a href="#"
+            style="padding: 2px 15px; background-color: #45526e; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">
+            delete
+          </a>
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+    function searchTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toLowerCase();
+      table = document.getElementById("table");
+      tr = table.getElementsByTagName("tr");
+
+      for (i = 1; i < tr.length; i++) {  // Start from 1 to skip table header
+        tr[i].style.display = "none";  // Initially hide all rows
+
+        td = tr[i].getElementsByTagName("td");
+        for (var j = 0; j < td.length; j++) {
+          if (td[j]) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";  // Show row if match is found
+              break;
+            }
+          }
+        }
+      }
+    }
+  </script>
+  {% endblock content %}

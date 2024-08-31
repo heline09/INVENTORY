@@ -1,0 +1,82 @@
+{%load static %}
+<style type="text/css">
+    .navbar {
+        background-color: white!important;
+        padding: 0;
+    }
+
+    .nav-link {
+        color: white !important;
+    }
+
+    .navbar>.container-fluid {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo-title-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        margin-left: 100px;
+    }
+
+    .logo-container {
+        margin-right: 10px;
+        width: 80px;
+        height: auto;
+    }
+
+    .logo-container img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .navbar-title {
+        font-size: 25px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        color: hsl(238, 22%, 38%);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+        color : black;
+    }
+    .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+        color : black !important;
+    }
+
+    @media (max-width: 768px) {
+        .navbar-title {
+            font-size: 18px;
+        }
+
+        .logo-container img {
+            max-height: 40px;
+            /* Smaller logo on mobile */
+        }
+    }
+</style>
+<nav class="navbar shadow-sm navbar-expand-md navbar-light sticky-top">
+    <div class="container-fluid">
+        <div class="logo-title-container">
+            <div class="logo-container">
+                <img src="{% static 'images/body_logo.png' %}" alt="KIMC Logo">
+            </div>
+            <span class="navbar-title">KENYA INSTITUTE OF MASS COMMUNICATION</span>
+        </div>
+        <div class="navbar-nav">
+            <a href="/" class="nav-item nav-link active">HOME</a>
+            <a href="{% url 'logout' %}" class="nav-item nav-link">LOGOUT</a>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,54 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block title %}Inventory Management System{% endblock title %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css">
+  .bs-example {
+    margin: 0px;
+
+  }
+
+  .navbar-brand {
+    font-size: 20px;
+    font-family: sans-serif;
+
+  }
+
+  .col-lg-6 {
+    padding-left: 20%;
+  }
+
+  .jumbotron {
+    margin-bottom: 0px;
+    background-color: white;
+  }
+
+  .jumbotron img {
+    max-width: 100%;
+    /* Ensure the image scales properly */
+    margin-left: 40%;
+    margin-top: -5%;
+  }
+</style>
+{% endblock styles %}
+
+{% block navbar %}
+{% include "library/navbar.html" %}
+{% endblock navbar %}
+
+{% block content %}
+
+<div class="jumbotron" style="background-color: white;">
+  <br>
+  <br>
+  <img src="{% static 'images/body_logo.png' %}" alt="">
+  <h1 style="text-align:center; font-family: Arial, sans-serif; font-weight: bold; font-size: 40px;" class="display-4">
+    KIMC INVENTORY MANAGEMENT SYSTEM</h1>
+</div>
+
+{% endblock content %}

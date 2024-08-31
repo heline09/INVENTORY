@@ -1,0 +1,51 @@
+{% load static %}
+    <style type="text/css">
+        .bs-example {
+            margin: 0px;
+
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-family: sans-serif;
+
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <div class="bs-example">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+            <img src="{% static 'images/logo 2020 clear-01 (3) (2) (2) (3).png' %}" alt="">            
+            <!-- <a href="/" class="navbar-brand" style="font-family: Arial, sans-serif; font-weight: bold; font-size: 24px;">KENYA INSTITUTE OF MASS COMMUNICATION</a> -->
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav">
+                </div>
+                
+                <div class="navbar-nav">
+                    <a href="/" class="nav-item nav-link active">HOME</a>
+                    <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                        {% comment %}<li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li> {% endcomment %}
+                        {% if user.is_authenticated %}
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        {% endif %}
+                    </ul> -->
+                    <a href="/adminlogin" class="nav-item nav-link">LOGIN</a>
+                </div>
+
+            </div>
+        </nav>
+    </div>
+
+
+</body>
+
+</html>

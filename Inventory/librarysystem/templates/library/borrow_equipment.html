@@ -1,0 +1,366 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block title %}Equipment Borrow{% endblock title %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css">
+	/* dropdown CSS */
+	#search-results {
+		display: none;
+		position: absolute;
+		background-color: white;
+		border: 1px solid #ccc;
+		z-index: 1000;
+		width: 100%;
+		max-height: 200px;
+		overflow-y: auto;
+	}
+
+	#search-results .dropdown-item {
+		padding: 10px;
+		cursor: pointer;
+	}
+
+	#search-results .dropdown-item:hover {
+		background-color: #f1f1f1;
+	}
+
+
+	.dropdown-item {
+		padding: 10px;
+		cursor: pointer;
+	}
+
+	.dropdown-item:hover {
+		background-color: #f1f1f1;
+	}
+
+	body {
+		color: #aa082e;
+		background: #e2ddde;
+		font-family: 'Roboto', sans-serif;
+	}
+
+	.form-control {
+		border-color: #eee;
+		min-height: 41px;
+		box-shadow: none !important;
+	}
+
+	.form-control:focus {
+		border-color: #5cd3b4;
+	}
+
+	.form-control,
+	.btn {
+		border-radius: 3px;
+	}
+
+	.signup-form {
+		width: 500px;
+		margin: 0 auto;
+		padding: 30px 0;
+	}
+
+	.signup-form h2 {
+		color: #333;
+		margin: 0 0 30px 0;
+		display: inline-block;
+		padding: 0 30px 10px 0;
+		border-bottom: 3px solid #ffffff;
+	}
+
+	.signup-form form {
+		color: #999;
+		border-radius: 3px;
+		margin-bottom: 15px;
+		background: #fff;
+		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+		padding: 30px;
+	}
+
+	.signup-form .form-group {
+		margin-bottom: 20px;
+	}
+
+	.signup-form label {
+		font-weight: bold;
+		color: black;
+		font-size: 13px;
+	}
+
+	.signup-form input[type="checkbox"] {
+		margin-top: 2px;
+	}
+
+	.signup-form .btn {
+		font-size: 16px;
+		font-weight: bold;
+		background: #161df0;
+		border: none;
+		margin-top: 20px;
+		min-width: 140px;
+	}
+
+	.signup-form .btn:hover,
+	.signup-form .btn:focus {
+		background: #6e6e6e;
+		outline: none !important;
+	}
+
+	.signup-form a {
+		color: #2b04ff;
+
+		text-decoration: underline;
+	}
+
+	.signup-form a:hover {
+		text-decoration: none;
+	}
+
+	.signup-form form a {
+		color: #5cd3b4;
+		text-decoration: none;
+	}
+
+	.signup-form form a:hover {
+		text-decoration: underline;
+	}
+	.dropdown-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    padding: 5px 10px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock styles %}
+
+{% block navbar %}
+{% include "library/navbaradmin.html" %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="signup-form">
+	<form method="post" class="form-horizontal">
+		<h1 style="color: black;">
+			BORROW FORM
+		</h1>
+		{% csrf_token %}
+		<div class="form-group">
+			<label for="search-input">Search Student:</label>
+			<input id="search-input" class="form-control" type="text" aria-label="Search student by name or ID"
+				placeholder="Search student by name or ID">
+			<select id="search-results" class="form-control" size="5"
+				style="display: none; position: absolute; width: 27.5rem; left: auto; top: auto;"></select>
+			<input type="hidden" id="selected-student-id" name="student">
+
+		</div>
+		<div id="no-students" style="display: none;">No students found</div>
+
+		<form method="post">
+			{% csrf_token %}
+			<div class="form-group">
+				<label for="equipment-input">Search Equipment:</label>
+				<input id="equipment-input" class="form-control" type="text" aria-label="Search Equipment"
+					placeholder="Search Equipment">
+				<div id="equipment-results" class="dropdown-menu" style="display: none; position: absolute; width: 27.5rem; left: auto; top: auto;">
+					<!-- Dropdown items will be inserted here -->
+				</div>
+			</div>
+			<div id="no-equipment" style="display: none;">No equipment found</div>
+			
+			<div class="form-group">
+				<label for="selected-equipment">Selected Equipment:</label>
+				<select id="selected-equipment" name="equipment" multiple class="form-control" size="5"></select>
+			</div>
+			{% for field in form %}
+			{% if field.html_name != 'student' and field.html_name != 'equipment' %}
+			<div class="form-group">
+				<label class="control-label col-xs-4">{{ field.label }}</label>
+				<div class="col-xs-8">
+					{{ field }}
+				</div>
+			</div>
+			{% endif %}
+			{% endfor %}
+
+
+
+			<div class="form-group">
+				<div class="col-xs-8 col-xs-offset-4" style="margin-left: 35%;">
+					<button type="submit" class="btn btn-primary btn-lg">ISSUE</button>
+				</div>
+			</div>
+		</form>
+		<div class="text-center">View Issued Equipment to Student <a href="{% url 'assigned_equipment' %}">Click
+				here</a></div>
+</div>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+    const searchInputElement = document.getElementById('search-input');
+    const searchResultsElement = document.getElementById('search-results');
+    const noStudentsElement = document.getElementById('no-students');
+
+    const equipmentInputElement = document.getElementById('equipment-input');
+    const equipmentResultsElement = document.getElementById('equipment-results');
+    const noEquipmentElement = document.getElementById('no-equipment');
+    const selectedEquipmentElement = document.getElementById('selected-equipment');
+
+    searchInputElement.addEventListener('input', performSearch);
+    equipmentInputElement.addEventListener('input', performEquipmentSearch);
+	equipmentInputElement.addEventListener('focus', showEquipmentResults);
+    document.addEventListener('click', hideEquipmentResults);
+
+    function performSearch() {
+        const searchTerm = searchInputElement.value.toLowerCase();
+        console.log('Search term:', searchTerm);
+
+        if (searchTerm.length < 2) {
+            searchResultsElement.style.display = 'none';
+            noStudentsElement.style.display = 'none';
+            return;
+        }
+
+        fetch(`/search_students/?search_term=${searchTerm}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched data:', data);
+                searchResultsElement.innerHTML = '';
+
+                if (data.length > 0) {
+                    searchResultsElement.style.display = 'block';
+                    searchResultsElement.size = data.length;
+
+                    data.forEach(student => {
+                        const option = document.createElement('option');
+                        option.textContent = `${student.student_id} - ${student.first_name} ${student.last_name}`;
+                        option.value = student.id;
+                        searchResultsElement.appendChild(option);
+                    });
+                    noStudentsElement.style.display = 'none';
+                } else {
+                    searchResultsElement.style.display = 'none';
+                    noStudentsElement.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error during fetch:', error);
+            });
+    }
+
+    searchResultsElement.addEventListener('change', function () {
+        const selectedStudentId = searchResultsElement.value;
+        const selectedOption = searchResultsElement.options[searchResultsElement.selectedIndex].text;
+        searchInputElement.value = selectedOption;
+        document.getElementById('selected-student-id').value = selectedStudentId;
+        searchResultsElement.style.display = 'none';
+    });
+
+   
+
+    function performEquipmentSearch() {
+        const searchTerm = equipmentInputElement.value.toLowerCase();
+        console.log('Search term:', searchTerm);
+
+        if (searchTerm.length < 2) {
+            equipmentResultsElement.style.display = 'none';
+            noEquipmentElement.style.display = 'none';
+            return;
+        }
+
+        fetch(`/search_equipment/?search_term=${searchTerm}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched data:', data);
+                equipmentResultsElement.innerHTML = '';
+
+                if (data.length > 0) {
+                    equipmentResultsElement.style.display = 'block';
+
+                    data.forEach((equipment, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'dropdown-item';
+                        item.innerHTML = `
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="${equipment.tag_num} - ${equipment.name}" id="equipment${index}">
+                                <label class="form-check-label" for="equipment${index}">
+                                    ${equipment.tag_num} - ${equipment.name}
+                                </label>
+                            </div>
+                        `;
+                        const checkbox = item.querySelector('input[type="checkbox"]');
+                        checkbox.addEventListener('change', () => toggleEquipmentSelection(equipment.tag_num, equipment.name, checkbox.checked));
+                        equipmentResultsElement.appendChild(item);
+                    });
+                    noEquipmentElement.style.display = 'none';
+                } else {
+                    equipmentResultsElement.style.display = 'none';
+                    noEquipmentElement.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error during fetch:', error);
+            });
+    }
+
+    function toggleEquipmentSelection(tagNum, name, isChecked) {
+        const equipmentValue = `${tagNum} - ${name}`;
+        const existingOption = Array.from(selectedEquipmentElement.options).find(opt => opt.value === equipmentValue);
+        
+        if (isChecked && !existingOption) {
+            const option = document.createElement('option');
+            option.value = equipmentValue;
+            option.textContent = equipmentValue;
+            option.selected = true;
+            selectedEquipmentElement.appendChild(option);
+        } else if (!isChecked && existingOption) {
+            existingOption.remove();
+        }
+    }
+	function showEquipmentResults() {
+        if (equipmentResultsElement.children.length > 0) {
+            equipmentResultsElement.style.display = 'block';
+        }
+    }
+
+    function hideEquipmentResults(event) {
+        if (!equipmentInputElement.contains(event.target) && !equipmentResultsElement.contains(event.target)) {
+            equipmentResultsElement.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        if (!searchInputElement.contains(event.target) && !searchResultsElement.contains(event.target)) {
+            searchResultsElement.style.display = 'none';
+        }
+        if (!equipmentInputElement.contains(event.target) && !equipmentResultsElement.contains(event.target)) {
+            equipmentResultsElement.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock content %}

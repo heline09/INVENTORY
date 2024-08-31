@@ -1,0 +1,89 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block styles %}
+{{ block.super }}
+<style media="screen">
+  .btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+  }
+
+  .btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+  }
+
+  .jumbotron {
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+  }
+
+  .jumbotron h1 {
+    text-align: center;
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .dashboard-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 150px;
+    background-color: #365d86;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .dashboard-btn:hover {
+    background-color: #12273f;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(185, 181, 181, 0.15);
+  }
+</style>
+{% endblock styles %}
+
+{% block navbar %}
+{% include "library/navbaradmin.html" %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="body">
+  <div class="jumbotron" style="margin-bottom: 0px; background-color: transparent;">
+    <h1 class="display-4" style="color: rgb(6, 6, 7);">Welcome {{user.first_name}}</h1>
+    <div class="options">
+      <a href="{% url 'add_equipment' %}" class="dashboard-btn">Add Equipment</a>
+      <a href="{% url 'view_equipment' %}" class="dashboard-btn">View Available Equipment</a>
+      <a href="{% url 'add_student' %}" class="dashboard-btn">Register Student </a>
+      <a href="{% url 'assigned_equipment' %}" class="dashboard-btn">View Assigned Equipment</a>
+      <a href="{% url 'borrow_equipment2' %}" class="dashboard-btn"> Borrow Equipment</a>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}
