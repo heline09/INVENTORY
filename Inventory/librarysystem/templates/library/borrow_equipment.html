@@ -5,8 +5,6 @@
 
 {% block styles %}
 {{ block.super }}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
 	/* dropdown CSS */
 	#search-results {
@@ -40,8 +38,7 @@
 	}
 
 	body {
-		color: #aa082e;
-		background: #e2ddde;
+		background-color: transparent;
 		font-family: 'Roboto', sans-serif;
 	}
 
@@ -64,6 +61,7 @@
 		width: 500px;
 		margin: 0 auto;
 		padding: 30px 0;
+		
 	}
 
 	.signup-form h2 {
@@ -154,9 +152,10 @@
 {% endblock navbar %}
 
 {% block content %}
-<div class="signup-form">
-	<form method="post" class="form-horizontal">
-		<h1 style="color: black;">
+<div class="signup-form" style="margin: 3rem auto;">
+	<form method="post" class="form-horizontal"style="border: 1px solid #ccc;
+		border-radius: .3rem;">
+		<h1 style="color: black; text-align: center;">
 			BORROW FORM
 		</h1>
 		{% csrf_token %}
@@ -164,9 +163,9 @@
 			<label for="search-input">Search Student:</label>
 			<input id="search-input" class="form-control" type="text" aria-label="Search student by name or ID"
 				placeholder="Search student by name or ID">
-			<select id="search-results" class="form-control" size="5"
-				style="display: none; position: absolute; width: 27.5rem; left: auto; top: auto;"></select>
-			<input type="hidden" id="selected-student-id" name="student">
+			<select id="search-results" name="student" class="form-control" size="5"
+				style="display: none; position: absolute; width: 438px; left: auto; top: auto;"></select>
+			<!-- <input type="hidden" id="selected-student-id" name="student"> -->
 
 		</div>
 		<div id="no-students" style="display: none;">No students found</div>
@@ -177,7 +176,7 @@
 				<label for="equipment-input">Search Equipment:</label>
 				<input id="equipment-input" class="form-control" type="text" aria-label="Search Equipment"
 					placeholder="Search Equipment">
-				<div id="equipment-results" class="dropdown-menu" style="display: none; position: absolute; width: 27.5rem; left: auto; top: auto;">
+				<div id="equipment-results" class="dropdown-menu" style="display: none; position: absolute; width: 27.4rem; left: auto; top: auto;">
 					<!-- Dropdown items will be inserted here -->
 				</div>
 			</div>
@@ -248,7 +247,7 @@
 
                 if (data.length > 0) {
                     searchResultsElement.style.display = 'block';
-                    searchResultsElement.size = data.length;
+                    // searchResultsElement.size = data.length;
 
                     data.forEach(student => {
                         const option = document.createElement('option');
@@ -267,11 +266,11 @@
             });
     }
 
-    searchResultsElement.addEventListener('change', function () {
-        const selectedStudentId = searchResultsElement.value;
+    searchResultsElement.addEventListener('change', function (event) {
+        // const selectedStudentId = searchResultsElement.value;
         const selectedOption = searchResultsElement.options[searchResultsElement.selectedIndex].text;
         searchInputElement.value = selectedOption;
-        document.getElementById('selected-student-id').value = selectedStudentId;
+        // document.getElementById('selected-student-id').value = selectedStudentId;
         searchResultsElement.style.display = 'none';
     });
 
@@ -301,46 +300,46 @@
                 if (data.length > 0) {
                     equipmentResultsElement.style.display = 'block';
 
-                    data.forEach((equipment, index) => {
-                        const item = document.createElement('div');
-                        item.className = 'dropdown-item';
-                        item.innerHTML = `
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="${equipment.tag_num} - ${equipment.name}" id="equipment${index}">
-                                <label class="form-check-label" for="equipment${index}">
-                                    ${equipment.tag_num} - ${equipment.name}
-                                </label>
-                            </div>
-                        `;
-                        const checkbox = item.querySelector('input[type="checkbox"]');
-                        checkbox.addEventListener('change', () => toggleEquipmentSelection(equipment.tag_num, equipment.name, checkbox.checked));
-                        equipmentResultsElement.appendChild(item);
-                    });
-                    noEquipmentElement.style.display = 'none';
-                } else {
-                    equipmentResultsElement.style.display = 'none';
-                    noEquipmentElement.style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error during fetch:', error);
-            });
-    }
 
-    function toggleEquipmentSelection(tagNum, name, isChecked) {
-        const equipmentValue = `${tagNum} - ${name}`;
-        const existingOption = Array.from(selectedEquipmentElement.options).find(opt => opt.value === equipmentValue);
-        
-        if (isChecked && !existingOption) {
-            const option = document.createElement('option');
-            option.value = equipmentValue;
-            option.textContent = equipmentValue;
-            option.selected = true;
-            selectedEquipmentElement.appendChild(option);
-        } else if (!isChecked && existingOption) {
-            existingOption.remove();
-        }
+                    data.forEach((equipment, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.innerHTML = `
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="${equipment.id}" id="equipment${index}">
+                            <label class="form-check-label" for="equipment${index}">
+                                ${equipment.tag_num} - ${equipment.name}
+                            </label>
+                        </div>
+                    `;
+                    const checkbox = item.querySelector('input[type="checkbox"]');
+                    checkbox.addEventListener('change', () => toggleEquipmentSelection(equipment.id, checkbox.checked, `${equipment.tag_num} - ${equipment.name}`));
+                    equipmentResultsElement.appendChild(item);
+                });
+                noEquipmentElement.style.display = 'none';
+            } else {
+                equipmentResultsElement.style.display = 'none';
+                noEquipmentElement.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error during fetch:', error);
+        });
+}
+
+function toggleEquipmentSelection(equipmentId, isChecked, displayName) {
+    const existingOption = Array.from(selectedEquipmentElement.options).find(opt => opt.value === equipmentId.toString());
+
+    if (isChecked && !existingOption) {
+        const option = document.createElement('option');
+        option.value = equipmentId;  // Set the value to the equipment ID
+        option.textContent = displayName;  // Display name can remain as "tag_num - name"
+        option.selected = true;
+        selectedEquipmentElement.appendChild(option);
+    } else if (!isChecked && existingOption) {
+        existingOption.remove();
     }
+}
 	function showEquipmentResults() {
         if (equipmentResultsElement.children.length > 0) {
             equipmentResultsElement.style.display = 'block';
@@ -353,6 +352,7 @@
         }
     }
 
+	
     document.addEventListener('click', function (event) {
         if (!searchInputElement.contains(event.target) && !searchResultsElement.contains(event.target)) {
             searchResultsElement.style.display = 'none';

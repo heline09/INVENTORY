@@ -11,8 +11,9 @@ from datetime import datetime,timedelta,date
 from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Student,Equipment,StudentEquipment
+from .models import Student,Equipment,StudentEquipment, Department, Course
 from .serializer import StudentSerializer, EquipmentSerializer, StudentEquipmentSerializer
+
 
 
 def home_view(request):
@@ -103,18 +104,44 @@ def view_equipment(request):
 
 
 def add_student(request):
-    if request.method == 'POST':
+   if request.method == 'POST': 
+        selected_department_id = request.POST.get("id_department")
+        selected_courses = request.POST.getlist("id_course")
+
         form = StudentForm(request.POST)
         if form.is_valid():
             student = form.save()
+
+            # Add selected courses to the student's profile
+            if selected_courses:  # Ensure courses are selected
+                for course_id in selected_courses:
+                    course = Course.objects.get(id=course_id)
+                    student.courses.add(course)  # Assuming 'courses' is the FK field
+
             return redirect('borrow_equipment', student.id)
         else:
             print(form.errors)
-    else:
+   else:
         form = StudentForm()
-    
-    return render(request, 'library/student.html', {'form': form})
+        select_options = {}
+        for department in Department.objects.all():
+            courses = [{'id': course.id, 'name': course.name} for course in department.courses.all()]
+            select_options[department.id] = courses    
 
+        courses = Course.objects.all()
+
+        selected_department_id = request.POST.get("id_department")
+        if selected_department_id:  
+            courses = Course.objects.filter(department_id=selected_department_id)
+
+        context = {
+            'form': form,
+            'departments': Department.objects.all(),
+            'select_options': select_options,
+            'courses': courses
+        }
+    
+   return render(request, 'library/student.html', context)
 
 def borrow_equipment(request, student_id=None):
     student = None
@@ -123,33 +150,32 @@ def borrow_equipment(request, student_id=None):
     
     if request.method == 'POST':
         form = BorrowForm(request.POST)
-        if form.is_valid():
-            selected_equipment = form.cleaned_data['equipment']
+        selected_equipment_ids = request.POST.getlist('equipment')  # Make sure this matches the form field name
+      
+        if form.is_valid():           
             return_date = form.cleaned_data['return_date']
-
+            student = form.cleaned_data['student']
+                        
             # Check if all selected equipment is available using check_availability() method
-            unavailable_equipment = [eq for eq in selected_equipment if not eq.check_availability()]
-            if unavailable_equipment:
-                messages.error(request, f'The following equipment is not available for borrowing: {", ".join([eq.name for eq in unavailable_equipment])}')
-                return redirect('borrow_equipment')
+            unavailable_equipment = False 
+            for equipment_id in selected_equipment_ids:
+                equipment=Equipment.objects.get(id=equipment_id)
+                if equipment.is_available == False:
+                    unavailable_equipment = True
+                    messages.error(request, f'The following equipment is not available for borrowing: {equipment.tag_num}-{equipment.name}')
+                else:
+                    record = StudentEquipment.objects.create(student=student, equipment=equipment, return_date=return_date)
+                    record.borrow_equipment()
 
-            # Create StudentEquipment instances and mark equipment as unavailable
-            for equipment in selected_equipment:
-                StudentEquipment.objects.create(
-                    student=student,
-                    equipment=equipment,
-                    return_date=return_date
-                )
-                equipment.is_available = False
-                equipment.save()
-
-            messages.success(request, "Equipment borrowed successfully.")
-            return redirect('assigned_equipment')
+            if unavailable_equipment == False:
+                messages.success(request, "Equipments borrowed successfully.")
+                return redirect('assigned_equipment')
         else:
             # Print form errors for debugging
             print(form.errors)
     else:
         form = BorrowForm({'student': student})
+    
     
     return render(request, 'library/borrow_equipment.html', {'form': form})
 
@@ -168,16 +194,10 @@ def edit_equipment(request, id):
 
     return render(request, 'library/updateform.html', {'form':form})
 
-
-
-
-
-
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def assigned_equipment(request):    
     assigned_equipment = StudentEquipment.objects.filter(date_returned=None)
-   
     return render(request,'library/assigned_equipment.html',{'assigned_equipment':assigned_equipment})
 
 def return_equipment(request, id):
@@ -273,12 +293,13 @@ def search_equipment(request):
     search_term = request.GET.get('search_term')
     equipments = []
     if search_term:
-        assets = Equipment.objects.filter(tag_num__icontains=search_term) | Equipment.objects.filter(name__icontains=search_term)
+        assets = Equipment.objects.filter(is_available=True)
+        assets = assets.filter(tag_num__icontains=search_term) | assets.filter(name__icontains=search_term)
         for asset in assets:
             equipments.append({
                 'id': asset.id,
                 'tag_num': asset.tag_num,
                 'name': asset.name,
             })
-            print("Equipment results:", equipments)
+            # print("Equipment results:", equipments)
     return JsonResponse(equipments, safe=False)

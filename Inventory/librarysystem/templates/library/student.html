@@ -21,7 +21,8 @@
 		padding: 15px;
 		border-radius: 10px;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-		background-color: #f7f7f7;
+		background-color: white;
+		border: 1px solid #ccc;
 	}
 	.centered-form .btn {
 		font-size: 16px;
@@ -72,31 +73,38 @@
 		</form>
 	</div>
 </div>
-
-<script>
-    document.getElementById('id_department').addEventListener('change', function() {
-    var departmentId = this.value;
-    var courseSelect = document.getElementById('id_course');
-    var courses = courseSelect.options;
-
-    // Reset course selection
-    courseSelect.value = '';
-
-    // Loop through all courses and display only those that belong to the selected department
-    for (var i = 0; i < courses.length; i++) {
-        var course = courses[i];
-		console.log(course)
-        if (course.getAttribute('data-department-id') === departmentId || course.value === '') {
-            course.style.display = 'block';
-        } else {
-            course.style.display = 'none';
-        }
-    }
-});
-
-
-	function clearForm() {
-		document.getElementById('student-form').reset();
-	}
-</script>
 {% endblock content %}
+
+{% block scripts %}
+{{ select_options|json_script:"select_options" }}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectOptions = JSON.parse(document.getElementById('select_options').textContent);
+        const selectDepartment = document.getElementById("id_department");
+        const selectCourse = document.getElementById("id_course");
+
+        selectDepartment.addEventListener("change", function () {
+            const departmentId = this.value;
+
+            // Clear existing options in the course select
+            selectCourse.innerHTML = '<option value="">Select Course</option>';
+
+            if (departmentId) {
+                const courses = selectOptions[departmentId] || [];
+
+                // Populate the courses dropdown
+                courses.forEach(function (course) {
+                    const option = document.createElement("option");
+                    option.value = course.id;
+                    option.textContent = course.name;
+                    selectCourse.appendChild(option);
+                });
+            }
+        });
+    });
+
+    function clearForm() {
+        document.getElementById("student-form").reset();
+    }
+</script>
+{% endblock scripts %}

@@ -90,11 +90,16 @@ class StudentEquipment(models.Model):
         self.equipment.is_available = False
         self.equipment.save()
     
-        def is_late(self):
+    def is_late(self):
             if self.date_returned:
                 return self.date_returned > self.return_date
             # If date_returned is not set, check if the current date is past the return_date
             return self.return_date < timezone.now()
+    def overdue_days(self):
+        if self.is_late:
+            today = timezone.now()
+            return (today - self.return_date).days
+        return 0
 
 
 

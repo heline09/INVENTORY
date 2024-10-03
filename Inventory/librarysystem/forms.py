@@ -50,13 +50,13 @@ class EquipmentForm(forms.ModelForm):
 
 class BorrowForm(forms.ModelForm):
     return_date = forms.DateTimeField(widget=forms.DateInput(attrs={'type': 'datetime-local'}))
-    equipment = forms.ModelMultipleChoiceField(
-        queryset=Equipment.objects.all(),
-        widget=forms.SelectMultiple,
-    )
+    # equipments = forms.ModelMultipleChoiceField(
+    #     queryset=Equipment.objects.all(),
+    #     widget=forms.SelectMultiple,
+    # )
     class Meta:
         model = models.StudentEquipment
-        fields = ['student','equipment', 'return_date']
+        fields = ['student', 'return_date']
 
     
    

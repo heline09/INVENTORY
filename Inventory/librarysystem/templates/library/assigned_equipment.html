@@ -13,6 +13,9 @@
     text-align: center;
     border-collapse: collapse;
   }
+  .styled-row th{
+  background-color: #2E3192 !important;
+ }
 
   table.redTable td,
   table.redTable th {
@@ -74,12 +77,12 @@
 {% endblock navbar %}
 
 {% block content %}
-{% include "library/messages.html" %}
+
 <h3 style='font-size: 40px;text-align:center; margin-bottom: 16px; margin-top: 32px;'>Assigned Equipment</h3>
 <br>
 <table id="table" class="table container">
   <thead class="thead-dark">
-    <tr>
+    <tr class="styled-row">
       <th scope="col">Student ID</th>
       <th scope="col"> Student Name</th>
       <th scope="col">Tag Number</th>
@@ -97,11 +100,18 @@
       <td>{{ student_equipment.equipment.tag_num }}</td>
       <td>{{ student_equipment.equipment.name }}</td>
       <td>{{ student_equipment.borrow_date }}</td>
+      <td>
+        {% if student_equipment.is_late %}
+        <span class="badge bg-danger">Late</span>
+        {{ student_equipment.overdue_days }} days
+        {% endif %}
+      </td>
       <td><a href="{% url 'return_equipment' student_equipment.id %}"
-          style="padding: 2px 15px; background-color: #45526e; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">RETURN</a>
+          style="padding: 2px 15px; background-color: #1c4be6; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">RETURN</a>
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+{% include 'library/pagination.html' %}
 {% endblock content %}
