@@ -38,15 +38,16 @@
 
     .signup-form {
         width: 400px;
-		margin-left: 30%;
-		width: 100%;
+        margin-left: 30%;
+        width: 100%;
         max-width: 500px;
         padding: 30px 0;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
-     .signup-form h2 {
+
+    .signup-form h2 {
         color: #333;
         margin: 0 0 30px 0;
         display: inline-block;
@@ -133,8 +134,8 @@
 <br><br><br>
 <div class="signup-form">
     <form method="post" class="form-horizontal">
-        <img src="{% static 'images/logo 2020 clear-01 (3) (2) (2).png' %}" alt="">
-
+        <!-- <img src="{% static 'images/logo 2020 clear-01 (3) (2) (2).png' %}" alt=""> -->
+        <center>LOGIN</center>
         {% csrf_token %}
         {% for field in form %}
         <div class="form-group">
@@ -151,4 +152,4 @@
 </div>
 {% endblock content %}
 
-{% block footer %}    {% endblock footer %}
+{% block footer %} {% endblock footer %}

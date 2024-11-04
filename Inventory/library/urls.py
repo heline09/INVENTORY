@@ -30,7 +30,6 @@ urlpatterns = [
     path('',include('librarysystem.urls')),
 
     path('accounts/',include('django.contrib.auth.urls') ),
-    path('', views.home_view),
 
     # path(r'^books/(?P<id>\d+)/delete$', views.removebook_view),
 
@@ -40,17 +39,19 @@ urlpatterns = [
     # path(r'^api/book/$', views.BookList.as_view()),
 
 
+    path('', views.adminclick_view),
     path('adminsignup', views.adminsignup_view, name = 'register'),
     path('studentsignup', views.studentsignup_view),
-    path('adminlogin', LoginView.as_view(template_name='library/adminlogin.html'),  name='login'),
+    path('adminlogin', LoginView.as_view(template_name='library/adminlogin.html'),  name='adminlogin'),
     path('studentlogin', LoginView.as_view(template_name='library/studentlogin.html')),
 
-    path('logout/', LogoutView.as_view(template_name='library/index.html'), name='logout'),
+    path('logout/', LogoutView.as_view(next_page='adminlogin'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('search_students/', views.search_students, name='search_students'),
     path('search_equipment/', views.search_equipment, name='search_equipment'),
     path('add_equipment/', views.add_equipment, name = 'add_equipment'),
     path('view_equipment/', views.view_equipment, name = 'view_equipment'),
+    path('remove_equipment/<int:equipment_id>', views.remove_equipment, name = 'remove_equipment'),
     path('edit_equipment/<int:id>', views.edit_equipment, name = 'edit_equipment'),
     path('add_student/', views.add_student, name = 'add_student'),
     path('borrow_equipment/<int:student_id>/', views.borrow_equipment, name = 'borrow_equipment'),
@@ -59,6 +60,8 @@ urlpatterns = [
     path('assigned_equipment/', views.assigned_equipment, name = 'assigned_equipment'),
     path('viewstudent', views.viewstudent_view),
     path('viewissuedbookbystudent', views.viewissuedbookbystudent),
+    path('generate_report/', views.generate_report, name = 'generate_report'),
+
     # path ('removebook', views.removebook_view),
 
     path('aboutus', views.aboutus_view),

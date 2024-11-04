@@ -1,16 +1,72 @@
 {% load static %}
-    <style type="text/css">
-        .bs-example {
-            margin: 0px;
+<style type="text/css">
+    .navbar {
+        background-color: #2E3192!important;
+        padding: 0;
+    }
 
+    .nav-link {
+        color: white !important;
+    }
+
+    .navbar>.container-fluid {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo-title-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        margin-left: 100px;
+    }
+
+    .logo-container {
+        margin-right: 10px;
+        width: 80px;
+        height: auto;
+    }
+
+    .logo-container img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .navbar-title {
+        font-size: 25px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        color: hsl(238, 22%, 38%);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+        color : black;
+    }
+    .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+        color : white !important;
+        
+    }
+
+    @media (max-width: 768px) {
+        .navbar-title {
+            font-size: 18px;
         }
 
-        .navbar-brand {
-            font-size: 20px;
-            font-family: sans-serif;
-
+        .logo-container img {
+            max-height: 40px;
+            /* Smaller logo on mobile */
         }
-    </style>
+    }
+</style>
 </head>
 
 <body>
@@ -19,7 +75,7 @@
 
     <div class="bs-example">
         <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
-            <img src="{% static 'images/logo 2020 clear-01 (3) (2) (2) (3).png' %}" alt="">            
+            <!-- <img src="{% static 'images/logo 2020 clear-01 (3) (2) (2) (3).png' %}" alt="">             -->
             <!-- <a href="/" class="navbar-brand" style="font-family: Arial, sans-serif; font-weight: bold; font-size: 24px;">KENYA INSTITUTE OF MASS COMMUNICATION</a> -->
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -30,7 +86,7 @@
                 </div>
                 
                 <div class="navbar-nav">
-                    <a href="/" class="nav-item nav-link active">HOME</a>
+                    <!-- <a href="/" class="nav-item nav-link active">HOME</a> -->
                     <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
                         {% comment %}<li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li> {% endcomment %}
@@ -38,7 +94,7 @@
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         {% endif %}
                     </ul> -->
-                    <a href="/adminlogin" class="nav-item nav-link">LOGIN</a>
+                    <!-- <a href="/adminlogin" class="nav-item nav-link">LOGIN</a> -->
                 </div>
 
             </div>

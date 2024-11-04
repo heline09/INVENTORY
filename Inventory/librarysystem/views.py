@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from . import forms,models
 from .forms import StudentForm,BorrowForm,EquipmentForm
+from django.contrib.auth.forms import AuthenticationForm    
+from django.contrib.auth import login 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group
 from django.contrib import auth
@@ -13,13 +15,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Student,Equipment,StudentEquipment, Department, Course
 from .serializer import StudentSerializer, EquipmentSerializer, StudentEquipmentSerializer
+from datetime import date
+# PDF Generation
+from reportlab.pdfgen import canvas
+from io import BytesIO
+# for XHTML to PDF Conversion
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.template import Context
+from django.conf import settings
+import os
 
 
-
-def home_view(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('dashboard')
-    return render(request,'library/index.html')
 
 #for showing signup/login button for student
 def studentclick_view(request):
@@ -29,9 +36,21 @@ def studentclick_view(request):
 
 #for showing signup/login button for teacher
 def adminclick_view(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('dashboard')
-    return render(request,'library/adminlogin.html')
+        form = AuthenticationForm()
+        if request.user.is_authenticated:
+                return redirect('dashboard')  # Redirect to the dashboard if the user is already authenticated
+    
+    # If the user is not authenticated, render the login form
+        if request.method == 'POST':
+                form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('dashboard')  # Redirect to dashboard after successful login
+        else:
+            form = AuthenticationForm()  # Display an empty login form for GET requests
+
+        return render(request, 'library/adminlogin.html', {'form': form})
 
 
 def adminsignup_view(request):
@@ -194,6 +213,12 @@ def edit_equipment(request, id):
 
     return render(request, 'library/updateform.html', {'form':form})
 
+def remove_equipment(request, equipment_id):
+    equipment = Equipment.objects.get(pk=equipment_id)
+    equipment.is_available = False
+    equipment.save()
+    return redirect('view_equipment')
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def assigned_equipment(request):    
@@ -246,7 +271,7 @@ def aboutus_view(request):
 
 def LogoutView(request):
      logout(request)
-     return redirect('/')
+     return redirect('adminlogin')
 
 class BookList(APIView):
     def get(self, request, format=None):
@@ -303,3 +328,7 @@ def search_equipment(request):
             })
             # print("Equipment results:", equipments)
     return JsonResponse(equipments, safe=False)
+
+def generate_report(request):
+    equipment = Equipment.objects.all()
+    template_path = 'library/available_report.html'

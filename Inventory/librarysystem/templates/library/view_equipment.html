@@ -125,7 +125,7 @@
             style="padding: 2px 15px; background-color: #45526e; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">edit</a>
         </td>
         <td>
-          <a href="#"
+          <a href="{% url 'remove_equipment' equipment.id %}"
             style="padding: 2px 15px; background-color: #45526e; border-radius: 2rem; color: white; text-align: center; text-decoration: none;">
             delete
           </a>
@@ -135,6 +135,7 @@
       {% endfor %}
     </tbody>
   </table>
+  <a class="nav-link4" href="#">Download PDF Report</a>
   {% include 'library/pagination.html' %}
   <script>
     function searchTable() {
